@@ -1,0 +1,57 @@
+---
+
+- name: Update SCM-Manager configuration
+  copy:
+    src: "{{ playbook_dir }}/roles/scm/files/SCM-Manager.repo"
+    dest: /etc/yum.repos.d
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Import SCM-Manager key from url
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://packages.scm-manager.org/repository/keys/gpg/oss-cloudogu-com.pub
+    validate_certs: no
+
+- name: Update SCM-Manager scm-server file configuration
+  copy:
+    src: "{{ playbook_dir }}/roles/scm/files/scm-server"
+    dest: /etc/default/scm-server
+    owner: root
+    group: root
+    mode: '0444'
+  
+- name: Execute dos2unix on scm-server
+  shell: dos2unix /etc/default/scm-server
+    
+- name: Install SCM-Manager
+  yum:
+    name: scm-server
+    state: latest
+
+- name: Update scm-server permissions
+  file:
+    path: /etc/default/scm-server
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Update SCM-Manager (server-config.xml) configuration
+  copy:
+    src: "{{ playbook_dir }}/roles/scm/files/server-config.xml"
+    dest: /etc/scm/server-config.xml
+    owner: root
+    group: scm
+    mode: '0640'
+
+- name: Update SCM-Manager keystore configuration
+  copy:
+    src: "{{ playbook_dir }}/roles/scm/files/keystore.pkcs12"
+    dest: /etc/scm/keystore.pkcs12
+    owner: scm
+    group: scm
+    mode: '0444'
+
+- name: Execute dos2unix on server-config.xml
+  shell: dos2unix /etc/scm/server-config.xml

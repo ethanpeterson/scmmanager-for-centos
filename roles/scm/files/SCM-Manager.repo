@@ -1,0 +1,7 @@
+[scm-manager]
+name=SCM-Manager Repository
+baseurl=https://packages.scm-manager.org/repository/yum-v2-releases/
+enabled=1
+gpgcheck=1
+priority=1
+gpgkey=file:///etc/pki/rpm-gpg/SCM-Manager

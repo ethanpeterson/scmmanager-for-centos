@@ -1,0 +1,11 @@
+---
+
+- name: yum update
+  yum:
+    name: '*'
+    state: latest
+
+- name: install dos2unix
+  yum:
+    name: dos2unix
+    state: present

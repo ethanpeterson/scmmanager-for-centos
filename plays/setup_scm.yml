@@ -1,0 +1,73 @@
+---
+
+- name: Ensure 8080 is added to firewalld
+  firewalld:
+    port: 8080/tcp
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+- name: Ensure https & http is added to firewalld
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - https
+    - http
+
+- name: Ensure 8443 & 8080 port forwarding to 443 & 80 respectively
+  firewalld:
+    rich_rule: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - 'rule forward-port port=443 protocol=tcp to-port=8443 family=ipv4'
+    - 'rule forward-port port=80 protocol=tcp to-port=8080 family=ipv4'
+
+# - name: Ensure 8443 port forwarding to 443 is enabled
+#   firewalld:
+#     port_forward: 
+#       - port: "{{ item.sourceport }}"
+#         proto: "{{ item.proto }}"
+#         toport: "{{ item.toport }}"
+#     state: enabled
+#     permanent: yes
+#     immediate: yes
+#   with_items:
+#     - { sourceport: "443", proto: "tcp", toport: "8443" }
+
+# - name: Stat /var/lib/scm/config
+#   stat:
+#     path: /var/lib/scm/config
+#   register: folder_path
+
+# - name: Check if /var/lib/scm/config exists
+#   debug:
+#     msg: "The /var/lib/scm/config directory exists"
+#   when: folder_path.stat.exists and folder_path.stat.isdir
+
+# - name: Check if /var/lib/scm/config does not exist
+#   debug:
+#     msg: "The /var/lib/scm/config directory does NOT exist"
+#   when: not folder_path.stat.exists
+
+# - name: Update SCM-Manager keystore configuration
+#   copy:
+#     src: "{{ playbook_dir }}/roles/scm/files/keystore.pkcs12"
+#     dest: /etc/scm/keystore.pkcs12
+#     owner: scm
+#     group: scm
+#     mode: '0444'
+#   when: folder_path.stat.exists and folder_path.stat.isdir
+
+- name: daemon-reload to pick up config changes
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Start scm-server
+  ansible.builtin.systemd:
+    name: scm-server
+    state: started
