@@ -34,3 +34,19 @@
   systemd:
     name: network
     state: restarted
+
+- name: Create network mount directory if it does not exist
+  ansible.builtin.file:
+    path: /mnt/scm
+    state: directory
+    mode: '0766'
+
+# this must be install first: ansible-galaxy collection install ansible.posix
+- name: Mount an CIFS network share
+  ansible.posix.mount:
+    src: //mediahub.kaden.khp/share/SCM
+    path: /mnt/scm
+    opts: credentials=/etc/samba/credentials,vers=2.0,uid=997,gid=994,_netdev,x-systemd.automount,rw,nounix,file_mode=0774,dir_mode=0774
+    state: mounted
+    fstype: cifs
+    boot: yes
