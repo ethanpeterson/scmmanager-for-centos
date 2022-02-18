@@ -30,7 +30,8 @@ HOST=0.0.0.0
 PORT=8080
 
 # home of scm-manager
-export SCM_HOME=/var/lib/scm
+#export SCM_HOME=/var/lib/scm
+export SCM_HOME=/mnt/scm/Base
 
 # force jvm path
 # JAVA_HOME="/usr/lib/jvm/jre-11"
