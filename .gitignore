@@ -4,6 +4,7 @@ bin/
 package-lock.json
 .zip
 credentials
+*.crt
 
 ### AWS SAM ###
 .aws-sam/

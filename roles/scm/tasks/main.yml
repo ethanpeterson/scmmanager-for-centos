@@ -55,3 +55,12 @@
 
 - name: Execute dos2unix on server-config.xml
   shell: dos2unix /etc/scm/server-config.xml
+
+# run this command later: sudo update-ca-trust extract
+- name: Add the KADEN CA cert chain
+  copy:
+    src: "{{ playbook_dir }}/roles/scm/files/kaden-THEGENERAL-CA.crt"
+    dest: /etc/pki/ca-trust/source/anchors/kaden-THEGENERAL-CA.crt
+    owner: root
+    group: root
+    mode: '0644'
