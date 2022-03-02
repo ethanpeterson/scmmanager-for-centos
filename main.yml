@@ -14,4 +14,4 @@
 
   tasks:
     - include: plays/setup_scm.yml
-    - include: plays/wrapup.xml
+    - include: plays/wrapup.yml
