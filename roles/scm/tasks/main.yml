@@ -1,5 +1,6 @@
 ---
 
+
 - name: Update SCM-Manager configuration
   copy:
     src: "{{ playbook_dir }}/roles/scm/files/SCM-Manager.repo"
@@ -9,7 +10,7 @@
     mode: '0644'
 
 - name: Import SCM-Manager key from url
-  ansible.builtin.rpm_key:
+  rpm_key:
     state: present
     key: https://packages.scm-manager.org/repository/keys/gpg/oss-cloudogu-com.pub
     validate_certs: no
@@ -59,8 +60,8 @@
 # run this command later: sudo update-ca-trust extract
 - name: Add the KADEN CA cert chain
   copy:
-    src: "{{ playbook_dir }}/roles/scm/files/kaden-THEGENERAL-CA.crt"
-    dest: /etc/pki/ca-trust/source/anchors/kaden-THEGENERAL-CA.crt
+    src: "{{ playbook_dir }}/roles/scm/files/{{ crtname }}"
+    dest: "/etc/pki/ca-trust/source/anchors/{{ crtname }}"
     owner: root
     group: root
     mode: '0644'

@@ -1,0 +1,6 @@
+---
+
+
+- name: daemon-reload to pick up config changes
+  systemd:
+    daemon_reload: yes

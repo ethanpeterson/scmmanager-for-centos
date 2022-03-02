@@ -1,0 +1,29 @@
+---
+
+
+- name: Ensure 8080 is added to firewalld
+  firewalld:
+    port: 8080/tcp
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+- name: Ensure https & http is added to firewalld
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - https
+    - http
+
+- name: Ensure 8443 & 8080 port forwarding to 443 & 80 respectively
+  firewalld:
+    rich_rule: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - 'rule forward-port port=443 protocol=tcp to-port=8443 family=ipv4'
+    - 'rule forward-port port=80 protocol=tcp to-port=8080 family=ipv4'

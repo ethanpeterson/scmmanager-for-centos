@@ -1,42 +1,39 @@
 ---
 
+
 - name: yum update
   yum:
     name: '*'
     state: latest
 
-- name: install dos2unix
+- name: install epel-release, cifs-utils, dos2unix
   yum:
-    name: dos2unix
+    name: [ 'dos2unix', 'epel-release', 'cifs-utils' ]
     state: present
 
 - name: Add network credentials file for mouting network drive
-  copy:
+  template:
     src: "{{ playbook_dir }}/roles/base/files/credentials"
     dest: /etc/samba/credentials
     owner: root
     group: root
     mode: '0600'
 
-- name: Update the network config with a static IP
-  copy:
-    src: "{{ playbook_dir }}/roles/base/files/ifcfg-eth0"
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
-    owner: root
-    group: root
-    mode: '0644'
+# - name: Update the network config with a static IP
+#   copy:
+#     src: "{{ playbook_dir }}/roles/base/files/ifcfg-eth0"
+#     dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+#     owner: root
+#     group: root
+#     mode: '0644'
 
-- name: daemon-reload to pick up config changes
-  systemd:
-    daemon_reload: yes
-
-- name: Restart the network service to get the new IP
-  systemd:
-    name: network
-    state: restarted
+# - name: Restart the network service to get the new IP
+#   systemd:
+#     name: network
+#     state: restarted
 
 - name: Create network mount directory if it does not exist
-  ansible.builtin.file:
+  file:
     path: /mnt/scm
     state: directory
     mode: '0774'

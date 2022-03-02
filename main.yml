@@ -1,11 +1,17 @@
 ---
 
-- hosts: 127.0.0.1
+
+- hosts: scm
   gather_facts: yes
+  become: true
+  vars_files:
+    - vars/external_vars.yml
 
   roles:
     - base
     - scm
+    - firewall
 
   tasks:
     - include: plays/setup_scm.yml
+    - include: plays/wrapup.xml
